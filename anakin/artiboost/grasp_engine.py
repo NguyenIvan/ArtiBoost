@@ -1,4 +1,5 @@
 import os
+import pdb
 import pickle
 from abc import ABC
 from typing import List, Optional
@@ -26,10 +27,11 @@ class GraspEngine(ABC):
         self.obj_grasps = {}
 
         for obj_name in obj_names:
-            grasp_path = os.path.join(grasp_dir, obj_name + ".pkl")
-            with open(grasp_path, "rb") as stream:
-                grasps = pickle.load(stream)
-            self.obj_grasps[obj_name] = grasps
+            # grasp_path = os.path.join(grasp_dir, obj_name + ".pkl")
+            # with open(grasp_path, "rb") as stream:
+            #     grasps = pickle.load(stream)
+            # self.obj_grasps[obj_name] = grasps
+            self.obj_grasps[obj_name] = [[np.zeros(48),None, None]] * 50 # Nguyen 
 
         self.mano_layer: ManoLayer = None
 
@@ -45,6 +47,7 @@ class GraspEngine(ABC):
         return name in self.obj_names
 
     def get_obj_grasp(self, obj_name: str, grasp_idx: int):
+        # pdb.set_trace()
         hand_pose, hand_shape, hand_tsl = self.obj_grasps[obj_name][grasp_idx]
         if not hand_shape:
             hand_shape = np.zeros(10)

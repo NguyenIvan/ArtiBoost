@@ -1,4 +1,4 @@
-name: artiboost
+name: e4
 channels:
   - pytorch
   - nvidia

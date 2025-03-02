@@ -3,6 +3,7 @@ import hashlib
 import itertools
 import json
 import os
+import pdb
 import pickle
 import random
 import shutil
@@ -476,6 +477,7 @@ class ArtiBoostLoader:
                 # 2. from grasp_engine get hand pose by obj_name
                 # 3. from view engine get presp mats
                 obj_name = self.obj_engine.obj_names[oi]
+                # pdb.set_trace()
                 hand_pose, _, _ = self.grasp_engine.get_obj_grasp(obj_name, gi)
                 persp_rotmat, camera_free_transf, z_offset = self.view_engine.get_view(vi)
 

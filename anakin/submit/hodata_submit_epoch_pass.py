@@ -1,5 +1,6 @@
 import json
 import os
+import pdb
 import shutil
 import subprocess
 from typing import (Any, Callable, List, Mapping, Optional, Sequence, TypeVar, Union)
@@ -55,6 +56,23 @@ class HOSubmitEpochPass(SubmitEpochPass):
             #     shutil.copy(pred_out_path, f"./common/{file_name}.json")
             # subprocess.call(["zip", "-j", f"./common/{file_name}.zip", f"./common/{file_name}.json"])
 
+    """
+    The `arch_model` parameter in this code snippet has the type `Union[Arch, torch.nn.parallel.DistributedDataParallel, torch.nn.DataParallel]` because it allows for flexibility in how the model is run during training or evaluation, depending on the computational environment and model architecture. Here's a breakdown of why each type is included:
+
+    1. **`Arch`**: This likely refers to the core architecture of the model used in the project, which could be a specific neural network architecture that has been defined (for example, a custom model class). When running the code on a single GPU or CPU, this basic model architecture is used without any additional wrapping for parallel computation.
+
+    2. **`torch.nn.parallel.DistributedDataParallel (DDP)`**: This is used when you want to distribute your model across multiple GPUs across different nodes. DDP is commonly used in large-scale training across multiple machines, allowing for efficient parallelism. When the model is wrapped in `DistributedDataParallel`, it ensures that gradients are averaged across all devices during backpropagation, enabling synchronized multi-GPU training.
+
+    3. **`torch.nn.DataParallel`**: This is used for simpler, multi-GPU training on a single machine. `DataParallel` splits input data across multiple GPUs and aggregates the results. While this method is easier to implement than DDP, it is generally less efficient in terms of GPU utilization compared to `DistributedDataParallel`, especially when scaling to multiple nodes.
+
+    ### Why this flexibility?
+    - **Single GPU / CPU**: When running on a single device, the `arch_model` will simply be an instance of `Arch`.
+    - **Multi-GPU (Single Node)**: If the model needs to utilize multiple GPUs on the same machine, it can be wrapped in `torch.nn.DataParallel`.
+    - **Multi-GPU (Multiple Nodes)**: For more distributed training setups, the model can be wrapped in `torch.nn.parallel.DistributedDataParallel` for better efficiency and scalability.
+
+    This flexible typing allows the code to handle various execution environments without modifying the core logic for model inference or evaluation.
+    """
+    
     def __call__(
         self,
         epoch_idx: int,
@@ -69,7 +87,6 @@ class HOSubmitEpochPass(SubmitEpochPass):
         arch_model.eval()
         if evaluator:
             evaluator.reset_all()
-
         # ? <<<<<<<<<<<<<<<<<<<<<<<<<
         res_joints: List[Any] = []
         res_verts: List[Any] = []
@@ -79,6 +96,7 @@ class HOSubmitEpochPass(SubmitEpochPass):
         bar = etqdm(data_loader, rank=rank)
         self.sample_counter = 0
         for batch_idx, batch in enumerate(bar):
+            # arch_model type is  DataParralel(Arch)
             predict_arch_dict = arch_model(batch)
             predicts = {}
             for key in predict_arch_dict.keys():

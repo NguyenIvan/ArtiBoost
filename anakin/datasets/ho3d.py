@@ -98,7 +98,7 @@ class HO3D(HOdata):
         if os.path.exists(self.cache_path) and self.use_cache:
             with open(self.cache_path, "rb") as p_f:
                 annotations = pickle.load(p_f)
-            logger.info(f"Loaded cache for {self.name}_{self.data_split}_{self.split_mode} from {self.cache_path}")
+            logger.info(f"Loaded NGUYEN cache for {self.name}_{self.data_split}_{self.split_mode} from {self.cache_path}")
         else:
             annot_mapping, seq_idx = self._load_annots(obj_meshes=self.obj_meshes,
                                                        seq_frames=seq_frames,
@@ -118,7 +118,9 @@ class HO3D(HOdata):
         if self.mini_factor_of_dataset != float(1):
             random.Random(1).shuffle(self.sample_idxs)
             self.sample_idxs = self.sample_idxs[:int(self.mini_factor_of_dataset * len(self.sample_idxs))]
-
+        # MINI_SPLIT_LEN = 40        
+        # logger.info(f'Truncate seq_idx list from {len(self.sample_idxs)} to {MINI_SPLIT_LEN}')
+        # self.sample_idxs = self.sample_idxs[:MINI_SPLIT_LEN]
         logger.info(f"{self.name} Got {colored(len(self.sample_idxs), 'yellow', attrs=['bold'])}"
                     f"/{len(self.seq_idx)} samples for data_split {self.data_split}")
 

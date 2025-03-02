@@ -1,3 +1,5 @@
+import __init_paths
+
 import os
 import random
 from functools import partial

@@ -1,4 +1,5 @@
 from logging import log
+import pdb
 from typing import Dict, List, Union, TypeVar
 
 import networkx as nx
@@ -55,12 +56,14 @@ class Arch(nn.Module):
     #     super(Arch, self).train(mode)
 
     def forward(self: T, input: Dict):
+        # pdb.set_trace()
         self.outputs = {}
         self._forward(self.root, input)
         return self.outputs
 
     def _forward(self: T, mtype: str, input: Dict):
         # logger.debug(f"calculate {mtype}")
+        
         inputs = dict(input)
         for p in self.models[mtype]["previous"]:
             if p not in self.outputs:

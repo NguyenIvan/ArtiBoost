@@ -6,9 +6,10 @@ DATASET:
     SPLIT_MODE: paper
     AUG: false
     AUG_PARAM: null
+    MINI_FACTOR: 0.001
 
 DATA_PRESET:
-  USE_CACHE: true
+  USE_CACHE: false
   FILTER_NO_CONTACT: false
   FILTER_THRESH: 0.0
   BBOX_EXPAND_RATIO: 1.2

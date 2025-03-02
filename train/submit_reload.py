@@ -1,3 +1,4 @@
+import __init_paths
 import os
 import random
 from time import time
@@ -14,7 +15,6 @@ from anakin.utils import builder
 from anakin.utils.logger import logger
 from anakin.utils.misc import TrainMode
 from anakin.utils.recorder import Recorder
-
 
 def set_all_seeds(seed):
     torch.cuda.manual_seed_all(seed)
